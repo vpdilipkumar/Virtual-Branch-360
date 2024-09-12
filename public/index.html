@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js"></script>
+    <script src="js/interaction.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+  </head>
+  <body>
+    <a-scene>
+      <a-sky color="#87CEEB"></a-sky>
+      <a-plane position="0 0 0" rotation="-90 0 0" width="30" height="30" color="#8B4513"></a-plane>
+      
+      <!-- Bank Environment -->
+      <a-box position="-15 2 0" scale="0.5 4 30" color="#D2B48C"></a-box>
+      <a-box position="15 2 0" scale="0.5 4 30" color="#D2B48C"></a-box>
+      <a-box position="0 2 -15" scale="30 4 0.5" color="#D2B48C"></a-box>
+      
+      <!-- Bank Counter -->
+      <a-box position="0 0.5 -10" scale="12 1 2" color="#8B4513"></a-box>
+      <a-box position="0 1.5 -10" scale="12 1 0.5" color="#8B4513"></a-box>
+
+      <!-- Loan Representative -->
+      <a-cylinder position="0 1.25 -5" radius="0.3" height="1.5" color="#FFE4B5"></a-cylinder>
+      <a-sphere position="0 2.35 -5" radius="0.25" color="#FFE4B5"></a-sphere>
+      <a-text value="Loan Rep" position="0 2.7 -5" scale="1 1 1" align="center"></a-text>
+
+      <!-- Voice Interaction Trigger -->
+      <a-cylinder position="0 0.75 -3" radius="0.5" height="0.1" color="#4682B4" interaction>
+        <a-text value="Approach to Talk" position="0 0.1 0" scale="0.5 0.5 0.5" align="center"></a-text>
+      </a-cylinder>
+
+      <!-- Dialog Panel -->
+      <a-entity id="dialogPanel" position="0 3 -6" visible="false">
+        <a-plane color="#FFFFFF" height="2" width="4"></a-plane>
+        <a-text id="dialogText" value="" 
+                position="0 0 0.1" scale="0.6 0.6 0.6" align="center" color="#000000" wrap-count="30"></a-text>
+      </a-entity>
+
+      <!-- Camera and Cursor -->
+      <a-entity position="0 1.6 0">
+        <a-camera>
+          <a-cursor></a-cursor>
+        </a-camera>
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
