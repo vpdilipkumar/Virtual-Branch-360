@@ -31,7 +31,6 @@ AFRAME.registerComponent('interaction', {
   init: function () {
     
     // Speech recognition setup
-    console.log('abc1');
     this.speechRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     this.speechRecognition.lang = 'en-US';
     this.speechRecognition.interimResults = false;
@@ -87,18 +86,14 @@ AFRAME.registerComponent('interaction', {
         this.resetInteraction();
       }
     });
-
-    this.salesforceIntegration = new SalesforceIntegration();
   },
 
   // Start the conversation
   async startConversation() {
     this.connectToSalesforce();
 
-    debugger;
-    this.createSalesforceApplication();
-    // this.dialogPanel.setAttribute('visible', true);
-    // this.askNextQuestion();  // Start by asking the first question
+    this.dialogPanel.setAttribute('visible', true);
+    this.askNextQuestion();  // Start by asking the first question
   },
 
   // Ask the next question with a 20-second timeout
@@ -167,33 +162,56 @@ AFRAME.registerComponent('interaction', {
       this.dialogText.setAttribute('value', repeatConfirmationMessage);
       this.speak(repeatConfirmationMessage);
       this.speechRecognition.stop()
-        }
+    // Restart listening for confirmation
+    }
   },
 
   // Call Salesforce API to create application
-  async createSalesforceApplication() {
+  async createSalesforceApplication(answers) {
+    // Sample Salesforce endpoint and token (replace with actual values)
+    const apiUrl = 'https://your-salesforce-instance.com/services/data/vXX.X/sobjects/Loan_Application__c';
+    const token = 'Bearer YOUR_SALESFORCE_ACCESS_TOKEN';  // Replace with the OAuth token
+
+    // Prepare payload for creating a Loan Application
+    const payload = {
+      Full_Name__c: answers[0],
+      Loan_Amount__c: answers[1],
+      Loan_Purpose__c: answers[2],
+      Annual_Income__c: answers[3]
+    };
+
+    // Make the API call to Salesforce
     try {
-      // Prepare payload for creating a Loan Application
-      const payload = {
-        // Full_Name__c: answers[0],
-        // Loan_Amount__c: parseFloat(answers[1]),
-        // Loan_Purpose__c: answers[2],
-        // Annual_Income__c: parseFloat(answers[3])
-      };
-      console.log('abc');
-      // Call Salesforce API to create application
-      const applicationId = await this.salesforceIntegration.createLoanApplication(payload);
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
 
-      // Provide confirmation to the user
-      const confirmationMessage = `Your loan application has been created successfully. Your application ID is ${applicationId}. Thank you for visiting the branch.`;
-      this.dialogText.setAttribute('value', confirmationMessage);
-      this.speak(confirmationMessage);
+      if (response.ok) {
+        const result = await response.json();
+        const applicationId = result.id;  // Retrieve the application ID from the response
 
-      this.isConversationComplete = true;
-      this.speechRecognition.stop();  // Stop recognition
-      setTimeout(() => this.resetInteraction(), 5000);  // Wait 5 seconds before resetting interaction
+        // Provide confirmation to the user
+        const confirmationMessage = `Your loan application has been created successfully. Your application ID is ${applicationId}. Thank you for visiting the branch.`;
+        this.dialogText.setAttribute('value', confirmationMessage);
+        this.speak(confirmationMessage);
+
+        this.isConversationComplete = true;
+        this.speechRecognition.stop();  // Stop recognition
+        setTimeout(() => this.resetInteraction(), 5000);  // Wait 5 seconds before resetting interaction
+      } else {
+        // Handle error response
+        const errorMessage = "There was an error creating your loan application. Please try again later.";
+        this.dialogText.setAttribute('value', errorMessage);
+        this.speak(errorMessage);
+        this.speechRecognition.stop();
+      }
     } catch (error) {
-      // Handle any errors
+      // Handle any network or other errors
       const errorMessage = "An error occurred while processing your request. Please try again later.";
       this.dialogText.setAttribute('value', errorMessage);
       this.speak(errorMessage);
