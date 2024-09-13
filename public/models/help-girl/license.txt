@@ -1,0 +1,11 @@
+Model Information:
+* title:	Office lady
+* source:	https://sketchfab.com/3d-models/office-lady-df458f315d0e4578af6a24014f8bccb6
+* author:	MadCatD (https://sketchfab.com/MadCatD)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Office lady" (https://sketchfab.com/3d-models/office-lady-df458f315d0e4578af6a24014f8bccb6) by MadCatD (https://sketchfab.com/MadCatD) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
