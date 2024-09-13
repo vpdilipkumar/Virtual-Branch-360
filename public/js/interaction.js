@@ -1,5 +1,35 @@
+
+
 AFRAME.registerComponent('interaction', {
+  connectToSalesforce: async function (){
+    try {
+      debugger;
+      key="3MVG9H_KVs6V9LiM6eVP1IbVJ3d6TF62PiVxV46Rai3x6ba8G9HGWlMs8aREi2XfEpFi6hd0DtiYpeoTvTVmx";
+      secret="EC4A23C861BEA5717A41F4255B8E9163ED80107E7D0C4A988269C6C031C96A0B";
+  
+      const oauth2 = new jsforce.OAuth2({
+        loginUrl: 'https://login.salesforce.com',
+        clientId: key,
+        clientSecret: secret,
+        redirectUri: 'https://login.salesforce.com/services/oauth2/success'
+        });
+        
+        const conn = new jsforce.Connection({
+          oauth2,
+          version: '32'
+        });
+      
+  
+        const res = await conn.apex.get('/v1/myws/');
+        console.log(res);
+    } catch (error) {
+      console.log('error: ' + error);
+    }
+  
+  },
+  
   init: function () {
+    
     // Speech recognition setup
     this.speechRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     this.speechRecognition.lang = 'en-US';
@@ -60,6 +90,8 @@ AFRAME.registerComponent('interaction', {
 
   // Start the conversation
   async startConversation() {
+    this.connectToSalesforce();
+
     this.dialogPanel.setAttribute('visible', true);
     this.askNextQuestion();  // Start by asking the first question
   },
@@ -112,12 +144,13 @@ AFRAME.registerComponent('interaction', {
     if (speechResult.includes("yes")) {
       // Call Salesforce API after confirmation
       this.createSalesforceApplication(this.answers);
+      this.speechRecognition.stop()
 
     } else if (speechResult.includes("no")) {
       const retryMessage = "You have chosen to modify the details. Let's start again.";
       this.dialogText.setAttribute('value', retryMessage);
       this.speak(retryMessage);
-
+      this.speechRecognition.stop()
       // Restart the question process
       this.answers = [];
       this.currentQuestionIndex = 0;
@@ -125,11 +158,11 @@ AFRAME.registerComponent('interaction', {
       this.askNextQuestion();
     } else {
       // If the user says something other than "yes" or "no", ask again in a more natural way
-      const repeatConfirmationMessage = "Could you please confirm if the details are correct? Please say Yes or No.";
+      const repeatConfirmationMessage = "Thank you";
       this.dialogText.setAttribute('value', repeatConfirmationMessage);
       this.speak(repeatConfirmationMessage);
-      this.speechRecognition.start();  // Restart listening for confirmation
-    }
+      this.speechRecognition.stop()
+        }
   },
 
   // Call Salesforce API to create application
