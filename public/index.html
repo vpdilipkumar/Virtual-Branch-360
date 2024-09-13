@@ -20,14 +20,12 @@
       <a-box position="0 1.5 -10" scale="12 1 0.5" color="#8B4513"></a-box>
 
       <!-- Loan Representative -->
-      <a-cylinder position="0 1.25 -5" radius="0.3" height="1.5" color="#FFE4B5"></a-cylinder>
-      <a-sphere position="0 2.35 -5" radius="0.25" color="#FFE4B5"></a-sphere>
+      <a-assets>
+        <a-asset-item id="tree-obj" src="models/office-guy.obj"></a-asset-item>
+        <a-asset-item id="tree-mtl" src="models/office-guy.mtl"></a-asset-item>
+      </a-assets>
       <a-text value="Loan Rep" position="0 2.7 -5" scale="1 1 1" align="center"></a-text>
-
-      <!-- Voice Interaction Trigger -->
-      <a-cylinder position="0 0.75 -3" radius="0.5" height="0.1" color="#4682B4" interaction>
-        <a-text value="Approach to Talk" position="0 0.1 0" scale="0.5 0.5 0.5" align="center"></a-text>
-      </a-cylinder>
+      <a-entity position="0 1.25 -5" obj-model="obj: #tree-obj; mtl: #tree-mtl" scale="0.05 0.05 0.05" interaction></a-entity>
 
       <!-- Dialog Panel -->
       <a-entity id="dialogPanel" position="0 3 -6" visible="false">
@@ -35,7 +33,6 @@
         <a-text id="dialogText" value="" 
                 position="0 0 0.1" scale="0.6 0.6 0.6" align="center" color="#000000" wrap-count="30"></a-text>
       </a-entity>
-
       <!-- Camera and Cursor -->
       <a-entity position="0 1.6 0">
         <a-camera>
